@@ -17,7 +17,7 @@
     dest="/etc/csf/csf.conf"
     regexp="^{{ item.name }} ="
     line='{{ item.name }} = "{{ item.config }}"'
-  with_items: csf_conf
+  with_items: "{{ csf_conf }}"
   when: "csf_conf is defined"
   notify:
     - restart csf

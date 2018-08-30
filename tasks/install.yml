@@ -9,14 +9,12 @@
 
 # Create a temp dir for our install
 - name: create temp dir
-  command: mkdir -p /tmp/csf
+  file: path=/tmp/csf state=directory mode=0700
   when: result|failed
 
 # Download the CSF file
 - name: download csf files
-  command: "wget https://download.configserver.com/csf.tgz"
-  args:
-    chdir: /tmp/csf
+  command: "wget -O /tmp/csf/csf.tgz https://download.configserver.com/csf.tgz"
   when: result|failed
 
 # Extract tar.gz
@@ -59,6 +57,7 @@
   register: disable_firewalld
   when: "ansible_os_family == 'RedHat' and ansible_distribution_major_version == '7'"
   failed_when: "disable_firewalld|failed and 'could not find' not in disable_firewalld.msg"
+  ignore_errors: yes
 
 # ifconfig (net-tools) needs to be installed for CSF to work properly in CentOS7
 - name: install package net-tools [RedHat]
